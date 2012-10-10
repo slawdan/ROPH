@@ -81,15 +81,22 @@ class RO_Cli_Parser extends ArrayObject{
         return $this;
     }
     
-    public function get($name){
-        if(isset($this[$name])) {
-            return $this[$name]->get();
+    public function getAll($name){
+        if(!isset($this[$name])) {
+            throw new Exception('Option undefined');
         }
-        throw new Exception('Option undefined');
+        return $this[$name]->getAll();
+    }
+    
+    public function get($name){
+        if(!isset($this[$name])) {
+            throw new Exception('Option undefined');
+        }
+        return $this[$name]->get();
     }
     
     public function getRest(){
-        return $this->get(self::REST);
+        return $this->getAll(self::REST);
     }
     
     public function printUsage() {
@@ -182,7 +189,7 @@ class RO_Cli_Parser extends ArrayObject{
     
 
     static public function makeRestOption() {
-        return RO_Cli_Option::make(self::REST)->toList();
+        return RO_Cli_Option::make(self::REST);
     }
     
     /**

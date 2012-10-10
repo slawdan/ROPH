@@ -19,8 +19,6 @@ class RO_Cli_Option {
     protected $_desc = '';
     
     protected $_type = self::T_STR;
-    protected $_min = 0;
-    protected $_max = 1;
     protected $_options = array();
     protected $_found = false;
     
@@ -60,31 +58,6 @@ class RO_Cli_Option {
         return $this->_type(self::T_ENUM, $default, $args);
     }
     
-    public function min($min) {
-        return $this->need($min, $this->_max);
-    }
-    
-    public function max($max) {
-        return $this->need($this->_min, $max);
-    }
-    
-    public function need($min = 0, $max = 1){
-        if(!is_numeric($min) || $min < 0) {
-            throw new Exception('Min must greater than 0');
-        }
-        if(!is_numeric($max) || $max < $min) {
-            throw new Exception('Max must greater than min');
-        }
-        
-        $this->_min = $min;
-        $this->_max = $max;
-        return $this;
-    }
-
-    public function toList($min = 0, $max = PHP_INT_MAX){
-        return $this->need($min, $max);
-    }
-    
     public function bool($default = NULL) {
         return $this->_type(self::T_BOOL, $default);
     }
@@ -110,8 +83,7 @@ class RO_Cli_Option {
     }
     
     public function isOk(){
-        $len = count($this->_value);
-        return ($this->_min <= $len && $len <= $this->_max);
+        return true;
     }
     
     public function getOptionName(){
@@ -134,17 +106,16 @@ class RO_Cli_Option {
     }
     
     public function get(){
-        if($this->_max > 1) {
-            if($this->_value) {
-                return $this->_value;
-            }elseif($this->_min < 1) {
-                return $this->_value;
-            } else {
-                return $this->_default;
-            }
-        }
-        if(isset($this->_value[0])){
+        if($this->_value) {
             return $this->_value[0];
+        } else {
+            return $this->_default;
+        }
+    }
+    
+    public function getAll(){
+        if($this->_value) {
+            return $this->_value;
         } else {
             return $this->_default;
         }
@@ -165,21 +136,19 @@ class RO_Cli_Option {
                 break;
             case self::T_INT:
                 if(strval($v) !== strval(intval($v))){
-                    throw new Exception('Type Error');
+                    throw new Exception('Type Error: ' . $v);
                 }
                 $this->_value[] = intval($v);
                 break;
             case self::T_FLOAT:
                 if(!is_numeric($v)) {
-                    throw new Exception('Type error');
+                    throw new Exception('Type error: ' . $v);
                 }
                 $this->_value[] = floatval($v);
                 break;
             case self::T_ENUM:
                 if(!in_array($v, $this->_options, true)){
-                    var_dump($this->_options);
-                    echo $v;
-                    throw new Exception('Enum value error');
+                    throw new Exception('Enum value error: ' . $v);
                 }
                 $this->_value[] = $v;
                 break;

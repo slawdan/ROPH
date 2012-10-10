@@ -2,8 +2,9 @@
 /**
  * CLI common utils
  * 
- * @author rodin
- *
+ * @author Rodin Shih <schludern@gmail.com> 
+ * @package ROPH
+ * @subpackage Cli
  */
 class RO_Cli{
 	
