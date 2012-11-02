@@ -12,6 +12,7 @@ class RO_Cli_Parser extends ArrayObject{
     protected $_cmdUsage;
     protected $_details;
     protected $_usage;
+    protected $_memo;
     protected $_options = array();
 
     public function __construct($cmdUsage = NULL, $details = NULL){
@@ -44,6 +45,16 @@ class RO_Cli_Parser extends ArrayObject{
     
     /**
      * 
+     * @param string $memo
+     * @return RO_Cli_Parser
+     */
+    public function memo($memo) {
+        $this->_memo = $memo;
+        return $this;
+    }
+    
+    /**
+     * 
      * @param array $args
      * 
      * @return RO_Cli_Parser
@@ -59,8 +70,12 @@ class RO_Cli_Parser extends ArrayObject{
             if($this->_isName($arg)) {
                 $name = $this->_extractName($arg);
                 if(isset($this[$name])) {
-                    $cur = $name;
                     $this[$name]->setFound();
+                    if($this[$name]->needParam()) {
+                        $cur = $name;
+                    } else {
+                        $cur = self::REST;
+                    }
                 } else {
                     throw new Exception('Unrecognized option name:' . $arg);
                 }
@@ -137,10 +152,12 @@ class RO_Cli_Parser extends ArrayObject{
         
         $spaces = str_repeat(' ', $optLength);
         $pattern = "  %s  %s" . PHP_EOL;
+        $availLength = 76; //There are 4 whitespaces in the pattern, so 80 - 4 is the available length  
         foreach ($options as $v) {
             /* @var $v RO_Cli_Option */
             $desc = $v->getDesc();
-            $descLines = explode("\n", $desc);
+            $desc = preg_replace('/\r\n|\r/', "\n", $desc);
+            $descLines = explode("\n", wordwrap($desc, $availLength - $optLength, "\n"));//explode("\n", $desc);
 
             list($s, ) = $v->getOptionName();
             if($s === self::REST){
@@ -159,6 +176,13 @@ class RO_Cli_Parser extends ArrayObject{
         }
         
         echo PHP_EOL;
+        
+        if($this->_memo) {
+            echo wordwrap($this->_memo, 80, PHP_EOL);
+        }
+        
+        echo PHP_EOL;
+        
         return $this;
     }
     

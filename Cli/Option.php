@@ -17,6 +17,7 @@ class RO_Cli_Option {
     protected $_long = '';
     protected $_prompt = '';
     protected $_desc = '';
+    protected $_needParam = true;
     
     protected $_type = self::T_STR;
     protected $_options = array();
@@ -59,7 +60,8 @@ class RO_Cli_Option {
     }
     
     public function bool($default = NULL) {
-        return $this->_type(self::T_BOOL, $default);
+        $this->_needParam = false;
+        return $this->_type(self::T_BOOL, (bool) $default);
     }
     
     public function long($option) {
@@ -121,10 +123,14 @@ class RO_Cli_Option {
         }
     }
     
+    public function needParam(){
+        return $this->_needParam;
+    }
+    
     public function setFound(){
         $this->_found = true;
         if($this->_type === self::T_BOOL) {
-            $this->_value[0] = true;
+            $this->_value[0] = !$this->_default;
         }
         return $this;
     }
