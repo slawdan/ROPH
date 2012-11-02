@@ -2,9 +2,10 @@
 /**
  * CLI common utils
  * 
- * @author Rodin Shih <schludern@gmail.com> 
+ * @author Rodin Shih <schludern@gmail.com>
  * @package ROPH
  * @subpackage Cli
+ *
  */
 class RO_Cli{
 	
@@ -42,4 +43,64 @@ class RO_Cli{
 	static public function optParser($shortUsage = NULL, $details = NULL){
 		return new RO_Cli_Parser($shortUsage, $details);
 	} 
+	
+	/**
+	 * 
+	 * @param string $cmd
+	 * @param string $args
+	 * @return array
+	 */
+	static public function exec($cmd){
+	    $args = func_get_args();
+	    array_shift($args);
+	    foreach ($args as $k => $a) {
+	        $args[$k] = escapeshellarg($a);
+	    }
+	    $argstr = implode(' ', $args);
+	    
+	    $output = '';
+	    $return = 0;
+	    exec($cmd . ' ' . $args, $output, $return);
+	    return array($output, $return);
+	}
+	
+	/**
+	 * 
+	 * @param string $cmd
+	 * @return string
+	 */
+	static public function execOut($cmd){
+	    list($output, ) = call_user_func_array(array(self, 'exec'), func_get_args());
+	    return $output;
+	}
+	
+	/**
+	 * 
+	 * @param string $cmd
+	 * @return int
+	 */
+	static public function execReturn($cmd) {
+	    list(, $return) = call_user_func_array(array(self, 'exec'), func_get_args());
+	    return $return;
+	}
+	
+	/**
+	 * Clear all the cli args.
+	 * 
+	 * @return void
+	 */
+	static public function resetArgv(){
+	    if(isset($_SERVER['argc'])) {
+	        $_SERVER['argc'] = 1;
+	    }
+	    
+	    if(isset($_SERVER['argv'])) {
+    	    foreach ($_SERVER['argv'] as $k => $v) {
+    	        if($k) {
+    	            unset($_SERVER['argv'][$k]);
+    	        }
+    	    }
+	    }
+	    return;
+	}
 }
