@@ -20,5 +20,6 @@ See [Wiki](https://github.com/slawdan/ROPH/wiki)
 
 ## Author
 
-- Rodin Shih 
-  ![Mail](http://rodin.rizili.com/wp-content/mail_image/mail_gmail.png)
+- [Rodin Shih](http://rodin.rizili.com)
+
+    ![Mail](http://rodin.rizili.com/wp-content/mail_image/mail_gmail.png)
