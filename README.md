@@ -31,4 +31,5 @@ ROPH is a lightweight flow-based PHP framework, which aims at simple, truely fle
 
 ## Author
 
-- Rodin Shih [[http://rodin.rizili.com/wp-content/mail_image/mail_gmail.png|Rodin Shih email]]
+- Rodin Shih 
+  ![Mail](http://rodin.rizili.com/wp-content/mail_image/mail_gmail.png)
