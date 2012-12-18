@@ -1,5 +1,5 @@
 {
-    "name": "slawdan/ROPH",
+    "name": "slawdan/roph",
     "require": {
         "php": ">=5.2.5"
     }
