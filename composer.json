@@ -1,0 +1,6 @@
+{
+    "name": "slawdan/ROPH",
+    "require": {
+        "php": ">=5.2.5"
+    }
+}
